@@ -5,12 +5,12 @@ class DieRoller
   attr_reader :die, :mod_total
 
   def initialize (dice_hash)
-    @max = dice_hash[:max]
-    @min = dice_hash[:min]
-    @mod_indiv = dice_hash[:mod_indiv] || 0
-    @mod_total = dice_hash[:mod_total] || 0
-    @floor = dice_hash[:floor]
-    @ceiling = dice_hash[:ceiling]
+    @max = dice_hash[:max].to_i
+    @min = dice_hash[:min].to_i
+    @mod_indiv = dice_hash[:mod_indiv].to_i || 0
+    @mod_total = dice_hash[:mod_total].to_i || 0
+    @floor = dice_hash[:floor].to_i || @min + @mod_indiv
+    @ceiling = dice_hash[:ceiling].to_i || @max + @mod_indiv
     @die_hash = {max: @max,
                  min: @min,
                  mod: @mod_indiv,
