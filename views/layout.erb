@@ -3,9 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Die Roller</title>
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/css/foundation-min.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <%= yield %>
+  <p class="row">
+    <p class="column small-12">
+      <%= yield %>
+    </p>
+  </p>
   <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="javascript/roller.js"></script>
 </body>
