@@ -1,10 +1,15 @@
-require 'spec_helper'
+ require 'spec_helper'
 
 describe DieRoller do
 
   let(:d6_roller) do
     dice_hash = {
-      max: 6
+      max: 6,
+      min: 1,
+      floor: 1,
+      ceiling: 6,
+      mod_indiv: 0,
+      mod_total: 0,
     }
     DieRoller.new(dice_hash)
   end
@@ -12,7 +17,11 @@ describe DieRoller do
   let(:d8plus1_roller) do
     dice_hash = {
       max: 8,
-      mod_indiv: 1
+      min: 1,
+      floor: 1,
+      ceiling: 9,
+      mod_indiv: 1,
+      mod_total: 0,
     }
     DieRoller.new(dice_hash)
   end
@@ -20,7 +29,11 @@ describe DieRoller do
   let(:d4minus1_roller) do
     dice_hash = {
       max: 4,
-      mod_indiv: -1
+      min: 1,
+      floor: 0,
+      ceiling: 4,
+      mod_indiv: -1,
+      mod_total: 0,
     }
     DieRoller.new(dice_hash)
   end
@@ -28,8 +41,11 @@ describe DieRoller do
   let(:d10plus2ceiling11_roller) do
     dice_hash = {
       max: 10,
+      min: 1,
+      floor: 1,
+      ceiling: 11,
       mod_indiv: 2,
-      ceiling: 11
+      mod_total: 0,
     }
     DieRoller.new(dice_hash)
   end
@@ -37,8 +53,11 @@ describe DieRoller do
   let(:d12minus4floor2_roller) do
     dice_hash = {
       max: 12,
+      min: 1,
+      floor: 2,
+      ceiling: 12,
       mod_indiv: -4,
-      floor: 2
+      mod_total: 0,
     }
     DieRoller.new(dice_hash)
   end
@@ -46,7 +65,11 @@ describe DieRoller do
   let(:d20_roller_plus2) do
     dice_hash = {
       max: 20,
-      mod_total: 2
+      min: 1,
+      floor: 1,
+      ceiling: 20,
+      mod_indiv: 0,
+      mod_total: 2,
     }
     DieRoller.new(dice_hash)
   end
@@ -301,7 +324,7 @@ describe DieRoller do
 
     context "given a normal d6" do
       it "should return the x highest rolls of y rolls" do
-        result = d6_roller.roll_get_highest(3, 2)
+        result = d6_roller.roll(3, :highest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -313,7 +336,7 @@ describe DieRoller do
 
     context "given a d8+1" do
       it "should return the x highest rolls of y rolls" do
-        result = d8plus1_roller.roll_get_highest(3, 2)
+        result = d8plus1_roller.roll(3, :highest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -325,7 +348,7 @@ describe DieRoller do
 
     context "given a d4-1" do
       it "should return the x highest rolls of y rolls" do
-        result = d4minus1_roller.roll_get_highest(3, 2)
+        result = d4minus1_roller.roll(3, :highest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -337,7 +360,7 @@ describe DieRoller do
 
     context "given a d10+2 ceiling 11" do
       it "should return the x highest rolls of y rolls" do
-        result = d10plus2ceiling11_roller.roll_get_highest(3, 2)
+        result = d10plus2ceiling11_roller.roll(3, :highest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -349,7 +372,7 @@ describe DieRoller do
 
     context "given a d12-4 floor 2" do
       it "should return the x highest rolls of y rolls" do
-        result = d12minus4floor2_roller.roll_get_highest(3, 2)
+        result = d12minus4floor2_roller.roll(3, :highest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -361,7 +384,7 @@ describe DieRoller do
 
     context "given a d20 roller plus 2" do
       it "should return the x highest rolls of y rolls" do
-        result = d20_roller_plus2.roll_get_highest(3, 2)
+        result = d20_roller_plus2.roll(3, :highest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -376,7 +399,7 @@ describe DieRoller do
   describe "#roll_get_lowest" do
     context "given a normal d6" do
       it "should return the x highest rolls of y rolls" do
-        result = d6_roller.roll_get_lowest(3, 2)
+        result = d6_roller.roll(3, :lowest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -388,7 +411,7 @@ describe DieRoller do
 
     context "given a d8+1" do
       it "should return the x highest rolls of y rolls" do
-        result = d8plus1_roller.roll_get_lowest(3, 2)
+        result = d8plus1_roller.roll(3, :lowest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -400,7 +423,7 @@ describe DieRoller do
 
     context "given a d4-1" do
       it "should return the x highest rolls of y rolls" do
-        result = d4minus1_roller.roll_get_lowest(3, 2)
+        result = d4minus1_roller.roll(3, :lowest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -412,7 +435,7 @@ describe DieRoller do
 
     context "given a d10+2 ceiling 11" do
       it "should return the x highest rolls of y rolls" do
-        result = d10plus2ceiling11_roller.roll_get_lowest(3, 2)
+        result = d10plus2ceiling11_roller.roll(3, :lowest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -424,7 +447,7 @@ describe DieRoller do
 
     context "given a d12-4 floor 2" do
       it "should return the x highest rolls of y rolls" do
-        result = d12minus4floor2_roller.roll_get_lowest(3, 2)
+        result = d12minus4floor2_roller.roll(3, :lowest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort
@@ -436,7 +459,7 @@ describe DieRoller do
 
     context "given a d20 roller plus 2" do
       it "should return the x highest rolls of y rolls" do
-        result = d20_roller_plus2.roll_get_lowest(3, 2)
+        result = d20_roller_plus2.roll(3, :lowest, 2)
         rolls = result[:rolls]
         total = result[:total]
         rolls = rolls.sort

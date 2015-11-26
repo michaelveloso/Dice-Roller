@@ -15,11 +15,25 @@ class DieRoller
                  min: @min,
                  mod: @mod_indiv,
                  floor: @floor,
-                ceiling: @ceiling}
+                 ceiling: @ceiling}
     @die = Die.new(@die_hash)
   end
 
-  def roll(num_dice = 1)
+  def roll(num_dice = 1, cull = :none, num_culled = 0)
+    if cull == :none
+      roll_normal(num_dice)
+    elsif cull == :highest
+      roll_get_highest(num_dice, num_culled)
+    elsif cull == :lowest
+      roll_get_lowest(num_dice, num_culled)
+    else
+      throw Exception
+    end
+  end
+
+  private
+
+  def roll_normal(num_dice = 1)
     rolls = get_rolls(num_dice)
     total = get_total(rolls)
     {total: total, rolls: rolls}
@@ -38,8 +52,6 @@ class DieRoller
     total = get_total(rolls_culled)
     {total: total, rolls: rolls}
   end
-
-  private
 
   def get_rolls(num_dice)
     rolls = []
