@@ -1,27 +1,64 @@
-var d4Button = $("#d4-roll")
-var d4NumDice = $("#d4-num-dice").get(0)
-var d4Total = $("#d4-total").get(0)
-var d4Rolls = $("#d4-rolls").get(0)
-var d4ModIndiv = $("#d4-mod-indiv").get(0)
-
-d4Button.on ("click", function(event){
+$(".die-form").on ("submit", function(event){
   event.preventDefault();
-  var d4Request = $.ajax({
-    url: "/d4",
-    method: "GET",
-    data: { num_dice: d4NumDice.value,
-            d4: {
-              min: 1,
-              max: 4,
-              mod_indiv: d4ModIndiv.value,
-              mod_total: 0,
-              floor: 1,
-              ceiling: 4 + d4ModIndiv.value,
-            },
-          }
-  });
-  d4Request.success (function(result) {
-    d4Total.value = result.total;
-    d4Rolls.value = result.rolls;
-  });
+  var thisForm = $(this)
+  var cullNumField = thisForm.children(".num-culled-field").first();
+  var totalField = thisForm.children(".total-output").first();
+  var rollsField = thisForm.children(".rolls-output").first();
+  var dieData = parseDataSerialized(thisForm.serialize());
+  dieData = normalizeDieData(dieData);
+  cullNumField.val(dieData.cull_num);
+  if (dieData.num_dice > 0)
+  {
+    var rollRequest = $.ajax({
+      url: "/roll",
+      method: "GET",
+      data: {
+              die: dieData
+            }
+    });
+    rollRequest.success (function(result) {
+      totalField.val(result.total);
+      rollsField.val(result.rolls);
+    });
+  }
+  else
+  {
+    totalField.val("");
+    rollsField.val("");
+  };
 });
+
+var parseDataSerialized = function(rawDataSerialized) {
+  var keyValuePairs = rawDataSerialized.split("&");
+  var hash = keyValuePairsToHash(keyValuePairs);
+  return hash;
+};
+
+var keyValuePairsToHash = function(pairs) {
+  var hash = {};
+  pairs.forEach(function(value, index, array)
+  {
+    var pair = value.split("=");
+    var key = pair[0];
+    var value = pair[1];
+    hash[key] = value;
+  });
+  hash.floor = +hash.mod_indiv + 1;
+  hash.ceiling = +hash.mod_indiv + (+hash.max);
+  return hash;
+}
+
+var normalizeDieData = function(dieData)
+{
+  if (dieData.cull_num > dieData.num_dice)
+  {
+    dieData.cull_num = dieData.num_dice;
+  }
+
+  if (dieData.cull_type == "none")
+  {
+    dieData.cull_num = "";
+  }
+
+  return dieData;
+}
