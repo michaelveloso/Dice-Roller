@@ -1,6 +1,5 @@
 require 'sinatra'
 require 'json'
-require 'pry'
 require_relative 'dieroller.rb'
 
 get '/' do
