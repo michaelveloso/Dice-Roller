@@ -1,7 +1,4 @@
-require 'pry'
-
 class Die
-
   attr_accessor :max, :min, :mod, :floor, :ceiling
 
   def initialize(die_hash)
@@ -22,5 +19,4 @@ class Die
       outcome
     end
   end
-
 end

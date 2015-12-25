@@ -1,7 +1,6 @@
 require_relative 'die'
 
 class DieRoller
-
   attr_reader :die, :mod_total
 
   def initialize (dice_hash)
@@ -64,5 +63,4 @@ class DieRoller
   def get_total(rolls)
     rolls.inject(@mod_total) {|sum, roll| sum + roll}
   end
-
 end

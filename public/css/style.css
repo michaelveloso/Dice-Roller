@@ -1,0 +1,14 @@
+input.input-field {
+  width: 50px;
+  display: inline-block;
+}
+
+input.output-field {
+  width: 100px;
+  display: inline-block;
+}
+
+select.input-field {
+  width: 100px;
+  display: inline-block;
+}
