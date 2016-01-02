@@ -3,8 +3,7 @@ require 'json'
 require_relative 'dieroller.rb'
 
 get '/' do
-  generated_html = generate_dice_html
-  erb :roller, locals: {generated_html: generated_html}
+  erb :roller
 end
 
 get '/roll' do
